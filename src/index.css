@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  @apply bg-gradient-to-br from-blue-950 via-gray-900 to-blue-950 text-gray-100 font-inter;
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1 {
+  @apply text-4xl font-bold text-blue-400;
+}
+
+button {
+  @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all;
+}
+
+input {
+  @apply px-3 py-2 rounded-lg bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
