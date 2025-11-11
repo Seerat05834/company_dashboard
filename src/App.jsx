@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "http://127.0.0.1:8000"; // apne backend ka link (Render pe deploy hone ke baad update kar lena)
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -8,12 +8,28 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // 🔹 NEW: Jab page open ho, to backend se first 50 companies fetch karo
   useEffect(() => {
-    if (!query.trim()) {
-      setData([]);
-      return;
-    }
+    setLoading(true);
+    fetch(`${BASE_URL}/search`) // no query = default 50 companies
+      .then((res) => {
+        if (!res.ok) throw new Error("Server error");
+        return res.json();
+      })
+      .then((json) => {
+        if (json.results) setData(json.results);
+        else setData(json);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError("Failed to fetch initial data.");
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
+  // 🔹 Search functionality (same as before)
+  useEffect(() => {
+    if (!query.trim()) return; // skip empty search (we already have default 50)
     const controller = new AbortController();
     setLoading(true);
     setError(null);
@@ -151,7 +167,9 @@ export default function App() {
                     backgroundColor: idx % 2 === 0 ? "#f1f5f9" : "white",
                     transition: "background 0.2s",
                   }}
-                  onMouseOver={(e) => (e.currentTarget.style.background = "#e0e7ff")}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.background = "#e0e7ff")
+                  }
                   onMouseOut={(e) =>
                     (e.currentTarget.style.background =
                       idx % 2 === 0 ? "#f1f5f9" : "white")
